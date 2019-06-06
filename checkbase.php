@@ -266,6 +266,21 @@ function get_theme_data_from_contents( $theme_data ) {
 	return array( 'Name' => $theme, 'Title' => $theme, 'URI' => $theme_uri, 'Description' => $description, 'Author' => $author, 'Author_URI' => $author_uri, 'Version' => $version, 'Template' => $template, 'Status' => $status, 'Tags' => $tags );
 }
 
+function tc_get_plugins() {
+	$plugins = get_plugins();
+	$wp_plugins = array();
+
+	foreach( $plugins as $location => $plugin ) {
+		$wp_plugins[ $plugin["Name"] ] = array(
+			'name' => $plugin["Name"],
+			'location' => $location,
+			'dirname' => dirname($location),
+		);
+	}
+
+	return $wp_plugins;
+}
+
 /*
  * 3.3/3.4 compat
  *
@@ -284,12 +299,13 @@ function tc_get_themes() {
 
 	foreach ( $themes as $theme ) {
 		$name = $theme->get('Name');
-		if ( isset( $wp_themes[ $name ] ) )
-			$wp_themes[ $name . '/' . $theme->get_stylesheet() ] = $theme;
-		else
-			$wp_themes[ $name ] = $theme;
+		if ( isset( $wp_themes[ $name ] ) ) {
+			$wp_themes[$name . '/' . $theme->get_stylesheet()] = $theme;
+		}
+		else {
+			$wp_themes[$name] = $theme;
+		}
 	}
-
 	return $wp_themes;
 }
 

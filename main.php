@@ -1,9 +1,86 @@
 <?php
-function check_main( $theme ) {
+
+// function get_plugin_file( $plugin_name ) {
+//     require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+//     $plugins = get_plugins();
+//     foreach( $plugins as $plugin_file => $plugin_info ) {
+//         if ( $plugin_info['Name'] == $plugin_name ) return $plugin_file;
+//     }
+//     return null;
+// }
+
+function check_main_plugin($plugin) {
+	global $themechecks, $data, $themename;
+
+	$plugin_path = WP_PLUGIN_DIR .'/'. plugin_basename($plugin[0]);
+	$files = listdir($plugin_path);
+	
+	if( $files ) {
+		foreach( $files as $key => $filename ) {
+			if (strpos($filename, 'tgm-plugin-activation') === false && strpos($filename, 'merlin') === false) {
+				if (substr($filename, -4) == '.php' && !is_dir($filename)) {
+						$php[$filename] = file_get_contents($filename);
+						$php[$filename] = tc_strip_comments($php[$filename]);
+				} else if (substr($filename, -4) == '.css' && !is_dir($filename)) {
+						$css[$filename] = file_get_contents($filename);
+				} else {
+						$other[$filename] = (!is_dir($filename)) ? file_get_contents($filename) : '';
+				}
+			}
+		}
+	}
+
+	$success = run_themechecks($php, $css, $other);
+
+	global $checkcount;
+
+	// second loop, to display the errors
+	echo '<h2>' . __('Plugin Info', 'theme-check') . ': </h2>';
+	echo '<div class="theme-info">';
+	
+
+	$data = get_plugin_data(WP_PLUGIN_DIR . "/" . $plugin[1], false, false);
+
+	echo (!empty($data['Title'])) ? '<p><label>' . __('Title', 'theme-check') . '</label><span class="info">' . $data['Title'] . '</span></p>' : '';
+	echo (!empty($data['Version'])) ? '<p><label>' . __('Version', 'theme-check') . '</label><span class="info">' . $data['Version'] . '</span></p>' : '';
+	echo (!empty($data['AuthorName'])) ? '<p><label>' . __('Author', 'theme-check') . '</label><span class="info">' . $data['AuthorName'] . '</span></p>' : '';
+	echo (!empty($data['AuthorURI'])) ? '<p><label>' . __('Author URI', 'theme-check') . '</label><span class="info"><a href="' . $data['AuthorURI'] . '">' . $data['AuthorURI'] . '</a>' . '</span></p>' : '';
+	echo (!empty($data['PluginURI'])) ? '<p><label>' . __('Plugin URI', 'theme-check') . '</label><span class="info"><a href="' . $data['PluginURI'] . '">' . $data['PluginURI'] . '</a>' . '</span></p>' : '';
+	echo (!empty($data['Description'])) ? '<p><label>' . __('Description', 'theme-check') . '</label><span class="info">' . $data['Description'] . '</span></p>' : '';
+
+	echo '<p>' . sprintf(
+			__(' Running %1$s tests against %2$s', 'theme-check'),
+			'<strong>' . $checkcount . '</strong>',
+			'<strong>' . $data['Title'] . '</strong>'
+			/*'<strong>' . $version[0] . '</strong>'
+	'<strong>' . $version[1] . '</strong>'*/
+	) . '</p>';
+	$results = display_themechecks();
+	if (!$success) {
+			echo '<h2>' . sprintf(__('One or more errors were found for %1$s.', 'theme-check'), $data['Title']) . '</h2>';
+	} else {
+			echo '<h2>' . sprintf(__('%1$s passed the tests', 'theme-check'), $data['Title']) . '</h2>';
+			tc_success();
+	}
+	if (!defined('WP_DEBUG') || WP_DEBUG == false) {
+			echo '<div class="updated"><span class="tc-fail">' . __('WARNING', 'theme-check') . '</span> ' . __('<strong>WP_DEBUG is not enabled!</strong> Please test your theme with <a href="https://codex.wordpress.org/Editing_wp-config.php">debug enabled</a> before you upload!', 'theme-check') . '</div>';
+	}
+
+	echo '<div class="tc-box">';
+	echo '<ul class="tc-result">';
+	echo $results;
+	echo '</ul></div>';
+}
+
+function check_main($theme) {
 	global $themechecks, $data, $themename;
 	$themename = $theme;
 	$theme = get_theme_root( $theme ) . "/$theme";
+
+	
+	
 	$files = listdir( $theme );
+	
 	$data = tc_get_theme_data( $theme . '/style.css' );
 	if ( $data[ 'Template' ] ) {
 		// This is a child theme, so we need to pull files from the parent, which HAS to be installed.
@@ -36,7 +113,6 @@ function check_main( $theme ) {
 
 		// run the checks
 		$success = run_themechecks($php, $css, $other);
-
 		global $checkcount;
 
 		// second loop, to display the errors
@@ -146,8 +222,29 @@ function tc_success() {
 	<?php
 }
 
+function tc_form_envato_plugin_check() {
+	$plugins = tc_get_plugins();
+
+		echo '<form action="themes.php?page=envato_theme_check" method="post">';
+		echo '<select name="pluginname">';
+		foreach( $plugins as $name => $info ) {
+
+			// var_dump(get_plugin_data(WP_PLUGIN_DIR . '/' . $info['location'], false, false));
+
+			echo '<option ';
+echo 'value="' . $info["dirname"] . ' | ' . $info["location"] . ' " style="font-weight:bold;">' . $info["name"] . '</option>';
+		}
+		
+		echo '</select>';
+		echo '<input class="button" type="submit" value="submit" />';
+		if ( defined( 'TC_PRE' ) || defined( 'TC_POST' ) ) echo ' <input name="trac" type="checkbox" /> ' . __( 'Output in Trac format.', 'theme-check' );
+		echo '<input name="s_info" type="checkbox" /> ' . __( 'Suppress INFO.', 'theme-check' );
+		echo '</form>';
+}
+
 function tc_form() {
 	$themes = tc_get_themes();
+
 	echo '<form action="themes.php?page=envato_theme_check" method="post">';
 	echo '<select name="themename">';
 	foreach( $themes as $name => $location ) {
@@ -160,7 +257,7 @@ function tc_form() {
 		echo ( basename( STYLESHEETPATH ) === $location['Stylesheet'] ) ? 'value="' . $location['Stylesheet'] . '" style="font-weight:bold;">' . $name . '</option>' : 'value="' . $location['Stylesheet'] . '">' . $name . '</option>';
 	}
 	echo '</select>';
-	echo '<input class="button" type="submit" value="' . __( 'Check it!', 'theme-check' ) . '" />';
+	echo '<input class="button" type="submit" value="' . __( 'Check it out!', 'theme-check' ) . '" />';
 	if ( defined( 'TC_PRE' ) || defined( 'TC_POST' ) ) echo ' <input name="trac" type="checkbox" /> ' . __( 'Output in Trac format.', 'theme-check' );
 	echo '<input name="s_info" type="checkbox" /> ' . __( 'Suppress INFO.', 'theme-check' );
 	echo '</form>';

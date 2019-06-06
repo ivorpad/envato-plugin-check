@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Envato Theme Check
+Plugin Name: Envato Plugin Check
 Plugin URI: https://github.com/envato/Envato-Theme-Check
 Description: Envato Theme Check is a modified fork of the original Theme Check by Otto42 with additional Themeforest specific WordPress checks.
 Author: Scott Parry
@@ -51,13 +51,25 @@ class EnvatoThemeCheck {
 
 		?>
 		<div id="theme-check" class="wrap">
+		<h1>hello there</h1>
+
 		<h1><?php _ex( 'Envato Theme Check', 'title of the main page', 'theme-check' ); ?></h1>
 		<div class="theme-check">
 		<?php
-			tc_form();
-		if ( !isset( $_POST[ 'themename' ] ) )  {
+			// tc_form();
+			tc_form_envato_plugin_check();
+		if ( !isset( $_POST[ 'pluginname' ] ) )  {
 			tc_intro();
 
+		}
+
+
+		if( isset( $_POST[ 'pluginname' ] ) ) {
+
+			$plugin = array_map('trim', explode('|', $_POST['pluginname']));
+
+
+			check_main_plugin( $plugin );
 		}
 
 		if ( isset( $_POST[ 'themename' ] ) ) {
