@@ -1,14 +1,4 @@
 <?php
-
-// function get_plugin_file( $plugin_name ) {
-//     require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
-//     $plugins = get_plugins();
-//     foreach( $plugins as $plugin_file => $plugin_info ) {
-//         if ( $plugin_info['Name'] == $plugin_name ) return $plugin_file;
-//     }
-//     return null;
-// }
-
 function check_main_plugin($plugin) {
 	global $themechecks, $data, $themename;
 
