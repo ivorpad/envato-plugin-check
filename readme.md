@@ -1,5 +1,5 @@
 # Envato Theme Check
-Plugin Name: Envato Theme Check
+Plugin Name: Envato Plugin Check
 
 Author: Scott Parry
 

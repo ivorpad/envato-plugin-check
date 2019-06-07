@@ -24,4 +24,4 @@ class Comment_Reply implements themecheck {
 	function getError() { return $this->error; }
 }
 
-$themechecks[] = new Comment_Reply;
+//$themechecks[] = new Comment_Reply;

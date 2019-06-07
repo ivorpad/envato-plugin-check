@@ -23,4 +23,4 @@ class CommentPaginationCheck implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new CommentPaginationCheck;
+//$themechecks[] = new CommentPaginationCheck;

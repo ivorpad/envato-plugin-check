@@ -38,4 +38,4 @@ class Plugin_Territory implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new Plugin_Territory;
+//$themechecks[] = new Plugin_Territory;

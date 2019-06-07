@@ -46,12 +46,12 @@ class File_Checks implements themecheck {
 			}
 		}
 
-		foreach( $musthave as $file ) {
-			if ( !in_array( $file, $filenames ) ) {
-				$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('REQUIRED','theme-check').'</span>: '.__('Could not find the file %s in the theme.', 'theme-check'), '<strong>' . $file . '</strong>' );
-				$ret = false;
-			}
-		}
+		// foreach( $musthave as $file ) {
+		// 	if ( !in_array( $file, $filenames ) ) {
+		// 		$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('REQUIRED','theme-check').'</span>: '.__('Could not find the file %s in the theme.', 'theme-check'), '<strong>' . $file . '</strong>' );
+		// 		$ret = false;
+		// 	}
+		// }
 
 		return $ret;
 	}

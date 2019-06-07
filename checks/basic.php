@@ -42,4 +42,4 @@ class Basic_Checks implements themecheck {
 	function getError() { return $this->error; }
 }
 
-$themechecks[] = new Basic_Checks;
+//$themechecks[] = new Basic_Checks;

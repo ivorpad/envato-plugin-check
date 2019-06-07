@@ -26,4 +26,4 @@ class Style_Suggested implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new Style_Suggested;
+//$themechecks[] = new Style_Suggested;

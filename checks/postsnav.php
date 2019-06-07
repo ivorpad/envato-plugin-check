@@ -25,4 +25,4 @@ class PostPaginationCheck implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new PostPaginationCheck;
+//$themechecks[] = new PostPaginationCheck;

@@ -19,4 +19,4 @@ class TagCheck implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new TagCheck;
+//$themechecks[] = new TagCheck;

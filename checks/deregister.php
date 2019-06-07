@@ -16,7 +16,7 @@ class DeregisterCheck implements themecheck {
 					$error = '/wp_deregister_script/';
 					$grep = tc_preg( $error, $file_path );
 
-					$this->error[] = sprintf( '<span class="tc-lead tc-warning">' . __('WARNING','theme-check') . '</span>: ' . __( 'Found wp_deregister_script in %1$s. Themes must not deregister core scripts.', 'theme-check' ),
+					$this->error[] = sprintf( '<span class="tc-lead tc-info">' . __('INFO','theme-check') . '</span>: ' . __( 'Found wp_deregister_script in %1$s. Possible removal of core scripts core scripts.', 'theme-check' ),
 						'<strong>' . $filename . '</strong>') . $grep;	
 					$ret = false;			
 				}

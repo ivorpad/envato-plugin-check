@@ -35,4 +35,4 @@ class PostFormatCheck implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new PostFormatCheck;
+//$themechecks[] = new PostFormatCheck;

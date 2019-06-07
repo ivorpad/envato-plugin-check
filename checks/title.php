@@ -57,4 +57,4 @@ class Title_Checks implements themecheck {
 	function getError() { return $this->error; }
 }
 
-$themechecks[] = new Title_Checks;
+//$themechecks[] = new Title_Checks;

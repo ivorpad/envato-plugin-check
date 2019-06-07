@@ -38,4 +38,4 @@ class Style_Needed implements themecheck {
 	}
 	function getError() { return $this->error; }
 }
-$themechecks[] = new Style_Needed;
+//$themechecks[] = new Style_Needed;

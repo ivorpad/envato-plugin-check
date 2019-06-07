@@ -167,4 +167,4 @@ class TextDomainCheck implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new TextDomainCheck;
+//$themechecks[] = new TextDomainCheck;

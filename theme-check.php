@@ -30,7 +30,7 @@ class EnvatoThemeCheck {
 	}
 
 	function themecheck_add_page() {
-		$page = add_theme_page( 'Envato Theme Check', 'Envato Theme Check', 'manage_options', 'envato_theme_check', array( $this, 'themecheck_do_page' ) );
+		$page = add_theme_page( 'Envato Plugin Check', 'Envato Plugin Check', 'manage_options', 'envato_plugin_check', array( $this, 'themecheck_do_page' ) );
 		add_action('admin_print_styles-' . $page, array( $this, 'load_styles' ) );
 	}
 
@@ -51,9 +51,8 @@ class EnvatoThemeCheck {
 
 		?>
 		<div id="theme-check" class="wrap">
-		<h1>hello there</h1>
 
-		<h1><?php _ex( 'Envato Theme Check', 'title of the main page', 'theme-check' ); ?></h1>
+		<h1><?php _ex( 'Envato Plugin Check', 'title of the main page', 'theme-check' ); ?></h1>
 		<div class="theme-check">
 		<?php
 			// tc_form();

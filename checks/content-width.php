@@ -20,4 +20,4 @@ class ContentWidthCheck implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new ContentWidthCheck;
+//$themechecks[] = new ContentWidthCheck;
