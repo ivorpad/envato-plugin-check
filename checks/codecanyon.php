@@ -41,7 +41,6 @@ class Themeforest implements themecheck {
 			'/create_function\s?\(/'                        => esc_html__( 'The create_function() function has been deprecated as of PHP 7.2.0 and must no longer be used', 'theme-check' ),
 		);
 
-		$wpdb_reg = '/(?<=(->))((query|get_results|get_row|get_var|get_col)\()(?!\s*\D*prepare)/';
 
 		$warn_checks = array(
 			'/@(?!media|keyframes|font)(\$|([a-zA-Z]))+/'     => esc_html__( 'Possible error suppression is being used', 'theme-check' ),
@@ -49,7 +48,14 @@ class Themeforest implements themecheck {
 			'/force_balance_tags\s*\(\s*\$/'      						=> esc_html__( 'Possible data validation issues found. force_balance_tags() does not escape data', 'theme-check' ),
 			'/(echo|print)\s*(\$|[a-zA-Z])/' 									=> esc_html__( 'Possible data validation issues found. All dynamic data must be correctly escaped for the context where it is rendered', 'theme-check' ),
 			'/$_SERVER/'                   										=> esc_html__( 'PHP Global Variable found. Ensure the context is safe and reliable', 'theme-check' ),
-			$wpdb_reg 																				=> esc_html__('Possible unprepared SQL statements. All queries with this method need to be prepared', 'theme-check')
+			'/(?<=>)get_results(?!.*\bprepare\b)/'						=> esc_html__( 'Possible unprepared SQL statements. All queries with this method need to be prepared', 'theme-check' ),
+			'/->query(?!.*\bprepare\b)/'											=> esc_html__( 'Possible unprepared SQL statements. All queries with this method need to be prepared', 'theme-check' ),
+			'/(?<=>)get_row(?!.*\bprepare\b)/'								=> esc_html__( 'Possible unprepared SQL statements. All queries with this method need to be prepared', 'theme-check' ),
+			'/(?<=>)get_var(?!.*\bprepare\b)/'								=> esc_html__( 'Possible unprepared SQL statements. All queries with this method need to be prepared', 'theme-check' ),
+			'/(?<=>)get_col(?!.*\bprepare\b)/'								=> esc_html__( 'Possible unprepared SQL statements. All queries with this method need to be prepared', 'theme-check' ),
+			'/(?<=->)prepare(?!.*%)/'													=> esc_html__( 'Possible unprepared SQL statements. All queries with this method need to be prepared', 'theme-check' ),
+			'/(?<![a-zA-Z])_e\(/'															=> esc_html__( 'All text strings are to be translatable and properly escaped', 'theme-check' ),
+			'/(?<![a-zA-Z])__\(/'															=> esc_html__( 'All text strings are to be translatable and properly escaped', 'theme-check' ),
 		);
 
 		$info_checks = array(
@@ -80,7 +86,6 @@ class Themeforest implements themecheck {
 			foreach ( $warn_checks as $key => $check )
 			{
 				checkcount();
-
 				if ( preg_match( $key, $phpfile, $matches ) )
 				{
 					$filename = tc_filename( $php_key );
