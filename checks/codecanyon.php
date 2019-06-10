@@ -33,7 +33,10 @@ class CodeCanyon implements plugincheck {
 
 		$warn_checks = array(
 			'/@(?!media|keyframes|font)(\$|([a-zA-Z]))+/'     => esc_html__( 'Possible error suppression is being used', 'plugin-check' ),
-			'/balanceTags\s*\(\s*\$/'             						=> esc_html__( 'Possible data validation issues found. balanceTags() does not escape data', 'plugin-check' ),
+			'/@include/'                                      => esc_html__( 'Possible error suppression is being used', 'plugin-check' ),
+			'/@require/'                                      => esc_html__( 'Possible error suppression is being used', 'plugin-check' ),
+			'/@file/'                                         => esc_html__( 'Possible error suppression is being used', 'plugin-check' ),
+			'/balanceTags\s*\(\s*/'             						=> esc_html__( 'Possible data validation issues found. balanceTags() does not escape data', 'plugin-check' ),
 			'/force_balance_tags\s*\(\s*\$/'      						=> esc_html__( 'Possible data validation issues found. force_balance_tags() does not escape data', 'plugin-check' ),
 			'/(echo|print)\s*(\$|[a-zA-Z])/' 									=> esc_html__( 'Possible data validation issues found. All dynamic data must be correctly escaped for the context where it is rendered', 'plugin-check' ),
 			'/$_SERVER/'                   										=> esc_html__( 'PHP Global Variable found. Ensure the context is safe and reliable', 'plugin-check' ),
