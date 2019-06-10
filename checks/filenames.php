@@ -33,22 +33,12 @@ class File_Checks implements themecheck {
 				'\.lubith'				=> __( 'Lubith theme generator file', 'theme-check' ),
 				);
 
-		$musthave = array( 'index.php', 'style.css' );
-		$rechave = array( 'readme.txt' => __( 'Please see <a href="https://codex.wordpress.org/Theme_Review#Theme_Documentation">Theme_Documentation</a> for more information.', 'theme-check' ) );
-
 		checkcount();
 
 		foreach( $blacklist as $file => $reason ) {
 			if ( $filename = preg_grep( '/' . $file . '/', $filenames ) ) {
 				$error = implode( array_unique( $filename ), ' ' );
 				$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('REQUIRED','theme-check').'</span>: '.__('%1$s %2$s found.', 'theme-check'), '<strong>' . $error . '</strong>', $reason) ;
-				$ret = false;
-			}
-		}
-
-		foreach( $musthave as $file ) {
-			if ( !in_array( $file, $filenames ) ) {
-				$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('REQUIRED','theme-check').'</span>: '.__('Could not find the file %s in the theme.', 'theme-check'), '<strong>' . $file . '</strong>' );
 				$ret = false;
 			}
 		}

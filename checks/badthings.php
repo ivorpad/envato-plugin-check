@@ -8,7 +8,7 @@ class Bad_Checks implements themecheck {
 		$checks = array(
 			'/(?<![_|a-z0-9|\.])eval\s?\(/i' => __( 'eval() is not allowed.', 'theme-check' ),
 			'/[^a-z0-9](?<!_)(popen|proc_open|[^_]exec|shell_exec|system|passthru)\(/' => __( 'PHP system calls are often disabled by server admins and should not be in themes', 'theme-check' ),
-			'/\s?ini_set\(/' => __( 'Themes should not change server PHP settings', 'theme-check' ),
+			'/\s?ini_set\(/' => __( 'Plugins should not change server PHP settings', 'theme-check' ),
 			'/base64_decode/' => __( 'base64_decode() is not allowed', 'theme-check' ),
 			'/base64_encode/' => __( 'base64_encode() is not allowed', 'theme-check' ),
 			'/uudecode/ims' => __( 'uudecode() is not allowed', 'theme-check' ),
