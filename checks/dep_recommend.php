@@ -1,6 +1,6 @@
 <?php
 // recommended deprecations checks... After some time, these will move into deprecated.php and become required.
-class Deprecated_Recommended implements themecheck {
+class Deprecated_Recommended implements plugincheck {
 	protected $error = array();
 
 	function check( $php_files, $css_files, $other_files ) {
@@ -9,11 +9,6 @@ class Deprecated_Recommended implements themecheck {
 		$ret = true;
 
 		$checks = array(
-			array( 'preview_theme' => '', '4.3' ),
-			array( '_preview_theme_template_filter' => '', '4.3' ),
-			array( '_preview_theme_stylesheet_filter' => '', '4.3' ),
-			array( 'preview_theme_ob_filter' => '', '4.3' ),
-			array( 'preview_theme_ob_filter_callback' => '', '4.3' ),
 			array( 'wp_richedit_pre' => '', '4.3' ),
 			array( 'wp_htmledit_pre' => '', '4.3' ),
 			array( 'wp_ajax_wp_fullscreen_save_post' => '', '4.3' ),
@@ -40,7 +35,7 @@ class Deprecated_Recommended implements themecheck {
 
 					// Point out the deprecated function.
 					$error_msg = sprintf(
-						__( '%1$s found in the file %2$s. Deprecated since version %3$s.', 'theme-check' ),
+						__( '%1$s found in the file %2$s. Deprecated since version %3$s.', 'plugin-check' ),
 						'<strong>' . $error . '()</strong>',
 						'<strong>' . $filename . '</strong>',
 						'<strong>' . $version . '</strong>'
@@ -48,14 +43,14 @@ class Deprecated_Recommended implements themecheck {
 
 					// Add alternative function when available.
 					if ( $alt ) {
-						$error_msg .= ' ' . sprintf( __( 'Use %s instead.', 'theme-check' ), '<strong>' . $alt . '</strong>' );
+						$error_msg .= ' ' . sprintf( __( 'Use %s instead.', 'plugin-check' ), '<strong>' . $alt . '</strong>' );
 					}
 
 					// Add the precise code match that was found.
 					$error_msg .= $grep;
 
 					// Add the finalized error message.
-					$this->error[] = '<span class="tc-lead tc-warning">' . __('WARNING','theme-check') . '</span>: ' . $error_msg;
+					$this->error[] = '<span class="tc-lead tc-warning">' . __('WARNING','plugin-check') . '</span>: ' . $error_msg;
 				}
 			}
 		}
@@ -64,4 +59,4 @@ class Deprecated_Recommended implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new Deprecated_Recommended;
+$pluginchecks[] = new Deprecated_Recommended;

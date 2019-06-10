@@ -4,7 +4,7 @@
  * Checks for resources being loaded from CDNs.
  */
 
-class CDNCheck implements themecheck {
+class CDNCheck implements plugincheck {
 	protected $error = array();
 
 	function check( $php_files, $css_files, $other_files) {
@@ -34,7 +34,7 @@ class CDNCheck implements themecheck {
 
 		foreach( $cdn_list as $cdn_slug => $cdn_url ) {
 			if ( false !== strpos( $all_code, $cdn_url ) ) {
-				$this->error[] = '<span class="tc-lead tc-warning">' . __('REQUIRED','theme-check') . '</span>: ' . sprintf( __( 'Found the URL of a CDN in the code: %s. You should not load CSS or Javascript resources from a CDN, please bundle them with the theme.', 'theme-check' ), '<code>' . esc_html( $cdn_url ) . '</code>' );
+				$this->error[] = '<span class="tc-lead tc-warning">' . __('REQUIRED','plugin-check') . '</span>: ' . sprintf( __( 'Found the URL of a CDN in the code: %s. You should not load CSS or Javascript resources from a CDN, please bundle them with the theme.', 'plugin-check' ), '<code>' . esc_html( $cdn_url ) . '</code>' );
 				$ret = false;
 			}
 		}
@@ -44,4 +44,4 @@ class CDNCheck implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new CDNCheck;
+$pluginchecks[] = new CDNCheck;

@@ -25,7 +25,7 @@ pre {
 form {
 	margin:20px auto;
 }
-.theme-check {
+.plugin-check {
 	margin:20px auto;
 	border:1px solid #dfdfdf;
 	-moz-border-radius:5px;
@@ -33,45 +33,45 @@ form {
 	-webkit-border-radius:5px;
 	border-radius:5px;
 }
-.theme-check h2 {
+.plugin-check h2 {
 	margin:0 0 20px 0;
 	padding:0 20px;
 	background:#dfdfdf url("gray-grad.png") repeat-x left top;
 	font-size:20px;
 	border-bottom:1px solid #ccc;
 }
-.theme-check p {
+.plugin-check p {
 	padding:5px 20px;
 }
-.theme-check form {
+.plugin-check form {
 	margin-left:20px;
 }
-.theme-check ul {
+.plugin-check ul {
 	margin-left:20px;
 }
-.theme-check h3 {
+.plugin-check h3 {
 	margin:0 0 10px 20px;
 	padding:0;
 }
-.theme-check ul {
+.plugin-check ul {
 	margin-bottom:10px;
 }
-.theme-info {
+.plugin-info {
 	padding:10px;
 	border:1px solid #dfdfdf;
 	margin:10px 20px 0 20px;
 }
-.theme-info p {
+.plugin-info p {
 	padding:0;
 	margin-bottom:10px;
 }
-.theme-info label {
+.plugin-info label {
 	float:left;
 	width:100px;
 	font-weight:bold;
 	display:block;
 }
-.theme-info span.info {
+.plugin-info span.info {
 	margin-left:100px;
 	display:block;
 }

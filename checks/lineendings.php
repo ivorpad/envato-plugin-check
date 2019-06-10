@@ -1,5 +1,5 @@
 <?php
-class LineEndingsCheck implements themecheck {
+class LineEndingsCheck implements plugincheck {
 	protected $error = array();
 
 	function check( $php_files, $css_files, $other_files ) {
@@ -8,7 +8,7 @@ class LineEndingsCheck implements themecheck {
 			if (preg_match("/\r\n/",$phpfile)) {
 				if (preg_match("/[^\r]\n/",$phpfile)) {
 					$filename = tc_filename( $php_key );
-					$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('WARNING','theme-check').'</span>: '.__('Both DOS and UNIX style line endings were found in the file %1$s. This causes a problem with SVN repositories and must be corrected before the theme can be accepted. Please change the file to use only one style of line endings.', 'theme-check'), '<strong>' . $filename . '</strong>' );
+					$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('WARNING','plugin-check').'</span>: '.__('Both DOS and UNIX style line endings were found in the file %1$s. This causes a problem with SVN repositories and must be corrected before the plugin can be accepted. Please change the file to use only one style of line endings.', 'plugin-check'), '<strong>' . $filename . '</strong>' );
 					$ret = false;
 				}
 			}
@@ -17,7 +17,7 @@ class LineEndingsCheck implements themecheck {
 			if (preg_match("/\r\n/",$cssfile)) {
 				if (preg_match("/[^\r]\n/",$cssfile)) {
 					$filename = tc_filename( $css_key );
-					$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('WARNING','theme-check').'</span>: '.__('Both DOS and UNIX style line endings were found in the file %1$s. This causes a problem with SVN repositories and must be corrected before the theme can be accepted. Please change the file to use only one style of line endings.', 'theme-check'), '<strong>' . $filename . '</strong>' );
+					$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('WARNING','plugin-check').'</span>: '.__('Both DOS and UNIX style line endings were found in the file %1$s. This causes a problem with SVN repositories and must be corrected before the plugin can be accepted. Please change the file to use only one style of line endings.', 'plugin-check'), '<strong>' . $filename . '</strong>' );
 					$ret = false;
 				}
 			}
@@ -28,7 +28,7 @@ class LineEndingsCheck implements themecheck {
 				if (preg_match("/\r\n/",$othfile)) {
 					if (preg_match("/[^\r]\n/",$othfile)) {
 						$filename = tc_filename( $oth_key );
-					$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('WARNING','theme-check').'</span>: '.__('Both DOS and UNIX style line endings were found in the file %1$s. This causes a problem with SVN repositories and must be corrected before the theme can be accepted. Please change the file to use only one style of line endings.', 'theme-check'), '<strong>' . $filename . '</strong>' );
+					$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('WARNING','plugin-check').'</span>: '.__('Both DOS and UNIX style line endings were found in the file %1$s. This causes a problem with SVN repositories and must be corrected before the plugin can be accepted. Please change the file to use only one style of line endings.', 'plugin-check'), '<strong>' . $filename . '</strong>' );
 						$ret = false;
 					}
 				}
@@ -40,4 +40,4 @@ class LineEndingsCheck implements themecheck {
 	function getError() { return $this->error; }
 }
 
-$themechecks[] = new LineEndingsCheck;
+$pluginchecks[] = new LineEndingsCheck;

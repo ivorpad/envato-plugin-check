@@ -1,6 +1,6 @@
 <?php
 function check_main_plugin($plugin) {
-	global $themechecks, $data, $themename;
+	global $pluginchecks, $data;
 
 	$plugin_path = WP_PLUGIN_DIR .'/'. plugin_basename($plugin[0]);
 	$files = listdir($plugin_path);
@@ -20,38 +20,38 @@ function check_main_plugin($plugin) {
 		}
 	}
 
-	$success = run_themechecks($php, $css, $other);
+	$success = run_pluginchecks($php, $css = [], $other);
 
 	global $checkcount;
 
 	// second loop, to display the errors
-	echo '<h2>' . __('Plugin Info', 'theme-check') . ': </h2>';
-	echo '<div class="theme-info">';
+	echo '<h2>' . __('Plugin Info', 'plugin-check') . ': </h2>';
+	echo '<div class="plugin-info">';
 	
 
 	$data = get_plugin_data(WP_PLUGIN_DIR . "/" . $plugin[1], false, false);
 
-	echo (!empty($data['Title'])) ? '<p><label>' . __('Title', 'theme-check') . '</label><span class="info">' . $data['Title'] . '</span></p>' : '';
-	echo (!empty($data['Version'])) ? '<p><label>' . __('Version', 'theme-check') . '</label><span class="info">' . $data['Version'] . '</span></p>' : '';
-	echo (!empty($data['AuthorName'])) ? '<p><label>' . __('Author', 'theme-check') . '</label><span class="info">' . $data['AuthorName'] . '</span></p>' : '';
-	echo (!empty($data['AuthorURI'])) ? '<p><label>' . __('Author URI', 'theme-check') . '</label><span class="info"><a href="' . $data['AuthorURI'] . '">' . $data['AuthorURI'] . '</a>' . '</span></p>' : '';
-	echo (!empty($data['PluginURI'])) ? '<p><label>' . __('Plugin URI', 'theme-check') . '</label><span class="info"><a href="' . $data['PluginURI'] . '">' . $data['PluginURI'] . '</a>' . '</span></p>' : '';
-	echo (!empty($data['Description'])) ? '<p><label>' . __('Description', 'theme-check') . '</label><span class="info">' . $data['Description'] . '</span></p>' : '';
+	echo (!empty($data['Title'])) ? '<p><label>' . __('Title', 'plugin-check') . '</label><span class="info">' . $data['Title'] . '</span></p>' : '';
+	echo (!empty($data['Version'])) ? '<p><label>' . __('Version', 'plugin-check') . '</label><span class="info">' . $data['Version'] . '</span></p>' : '';
+	echo (!empty($data['AuthorName'])) ? '<p><label>' . __('Author', 'plugin-check') . '</label><span class="info">' . $data['AuthorName'] . '</span></p>' : '';
+	echo (!empty($data['AuthorURI'])) ? '<p><label>' . __('Author URI', 'plugin-check') . '</label><span class="info"><a href="' . $data['AuthorURI'] . '">' . $data['AuthorURI'] . '</a>' . '</span></p>' : '';
+	echo (!empty($data['PluginURI'])) ? '<p><label>' . __('Plugin URI', 'plugin-check') . '</label><span class="info"><a href="' . $data['PluginURI'] . '">' . $data['PluginURI'] . '</a>' . '</span></p>' : '';
+	echo (!empty($data['Description'])) ? '<p><label>' . __('Description', 'plugin-check') . '</label><span class="info">' . $data['Description'] . '</span></p>' : '';
 
 	echo '<p>' . sprintf(
-			__(' Running %1$s tests against %2$s', 'theme-check'),
+			__(' Running %1$s tests against %2$s', 'plugin-check'),
 			'<strong>' . $checkcount . '</strong>',
 			'<strong>' . $data['Title'] . '</strong>'
 	) . '</p>';
-	$results = display_themechecks();
+	$results = display_pluginchecks();
 	if (!$success) {
-			echo '<h2>' . sprintf(__('One or more errors were found for %1$s.', 'theme-check'), $data['Title']) . '</h2>';
+			echo '<h2>' . sprintf(__('One or more errors were found for %1$s.', 'plugin-check'), $data['Title']) . '</h2>';
 	} else {
-			echo '<h2>' . sprintf(__('%1$s passed the tests', 'theme-check'), $data['Title']) . '</h2>';
+			echo '<h2>' . sprintf(__('%1$s passed the tests', 'plugin-check'), $data['Title']) . '</h2>';
 			tc_success();
 	}
 	if (!defined('WP_DEBUG') || WP_DEBUG == false) {
-			echo '<div class="updated"><span class="tc-fail">' . __('WARNING', 'theme-check') . '</span> ' . __('<strong>WP_DEBUG is not enabled!</strong> Please test your theme with <a href="https://codex.wordpress.org/Editing_wp-config.php">debug enabled</a> before you upload!', 'theme-check') . '</div>';
+			echo '<div class="updated"><span class="tc-fail">' . __('WARNING', 'plugin-check') . '</span> ' . __('<strong>WP_DEBUG is not enabled!</strong> Please test your plugin with <a href="https://codex.wordpress.org/Editing_wp-config.php">debug enabled</a> before you upload!', 'plugin-check') . '</div>';
 	}
 
 	echo '<div class="tc-box">';
@@ -86,19 +86,15 @@ function tc_strip_comments( $code ) {
 
 function tc_intro() {
 ?>
-	<h2><?php _e( 'About', 'theme-check' ); ?></h2>
-	<p><?php _e( "The Envato Plugin Check plugin is an easy way to test your theme and make sure it's up to date with the latest Themeforest review standards. With it, you can run all the same automated testing tools on your theme that Themeforest Reviewers use for theme submissions.", 'theme-check' ); ?></p>
+	<h2><?php _e( 'About', 'plugin-check' ); ?></h2>
+	<p><?php _e( "The Envato Plugin Check plugin is an easy way to test your plugin and make sure it's up to date with the latest CodeCanyon review standards. With it, you can run all the same automated testing tools on your plugin that CodeCanyon Reviewers use for theme submissions.", 'plugin-check' ); ?></p>
 	<?php
 }
 
 function tc_success() {
 	?>
 	<div class="tc-success">
-		<p><?php _e( 'Congratulations! Your theme has passed the basic tests.', 'theme-check' ); ?></p>
-
-		<p><?php _e( 'Next, import the <a href="//codex.wordpress.org/Theme_Unit_Test">WordPress Theme Unit Test Data</a> and ensure all default content is properly formatted.', 'theme-check' ); ?></p>
-
-		<p><?php _e( 'Finally, review the <a href="//help.market.envato.com/hc/en-us/articles/202822450-WordPress-Theme-Submission-Requirements">WordPress Theme Submission Requirements</a> before uploading your WordPress Theme.', 'theme-check' ); ?></p>
+		<p><?php _e( 'Congratulations! Your plugin has passed the basic tests.', 'plugin-check' ); ?></p>
 	</div>
 	<?php
 }
@@ -106,40 +102,16 @@ function tc_success() {
 function tc_form_envato_plugin_check() {
 	$plugins = tc_get_plugins();
 
-		echo '<form action="themes.php?page=envato_plugin_check" method="post">';
+		echo '<form action="plugins.php?page=envato_plugin_check" method="post">';
 		echo '<select name="pluginname">';
 		foreach( $plugins as $name => $info ) {
-
-			// var_dump(get_plugin_data(WP_PLUGIN_DIR . '/' . $info['location'], false, false));
-
 			echo '<option ';
 echo 'value="' . $info["dirname"] . ' | ' . $info["location"] . ' " style="font-weight:bold;">' . $info["name"] . '</option>';
 		}
 		
 		echo '</select>';
 		echo '<input class="button" type="submit" value="submit" />';
-		if ( defined( 'TC_PRE' ) || defined( 'TC_POST' ) ) echo ' <input name="trac" type="checkbox" /> ' . __( 'Output in Trac format.', 'theme-check' );
-		echo '<input name="s_info" type="checkbox" /> ' . __( 'Suppress INFO.', 'theme-check' );
+		if ( defined( 'TC_PRE' ) || defined( 'TC_POST' ) ) echo ' <input name="trac" type="checkbox" /> ' . __( 'Output in Trac format.', 'plugin-check' );
+		echo '<input name="s_info" type="checkbox" /> ' . __( 'Suppress INFO.', 'plugin-check' );
 		echo '</form>';
-}
-
-function tc_form() {
-	$themes = tc_get_themes();
-
-	echo '<form action="themes.php?page=envato_plugin_check" method="post">';
-	echo '<select name="themename">';
-	foreach( $themes as $name => $location ) {
-		echo '<option ';
-		if ( isset( $_POST['themename'] ) ) {
-			echo ( $location['Stylesheet'] === $_POST['themename'] ) ? 'selected="selected" ' : '';
-		} else {
-			echo ( basename( STYLESHEETPATH ) === $location['Stylesheet'] ) ? 'selected="selected" ' : '';
-		}
-		echo ( basename( STYLESHEETPATH ) === $location['Stylesheet'] ) ? 'value="' . $location['Stylesheet'] . '" style="font-weight:bold;">' . $name . '</option>' : 'value="' . $location['Stylesheet'] . '">' . $name . '</option>';
-	}
-	echo '</select>';
-	echo '<input class="button" type="submit" value="' . __( 'Check it out!', 'theme-check' ) . '" />';
-	if ( defined( 'TC_PRE' ) || defined( 'TC_POST' ) ) echo ' <input name="trac" type="checkbox" /> ' . __( 'Output in Trac format.', 'theme-check' );
-	echo '<input name="s_info" type="checkbox" /> ' . __( 'Suppress INFO.', 'theme-check' );
-	echo '</form>';
 }

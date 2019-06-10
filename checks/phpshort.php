@@ -1,5 +1,5 @@
 <?php
-class PHPShortTagsCheck implements themecheck {
+class PHPShortTagsCheck implements plugincheck {
 	protected $error = array();
 
 	function check( $php_files, $css_files, $other_files ) {
@@ -11,7 +11,7 @@ class PHPShortTagsCheck implements themecheck {
 			if ( preg_match( '/<\?\=/i', $phpfile ) ) {
 				$filename = tc_filename( $php_key );
 				$grep = tc_preg( '/<\?\=/', $php_key );
-				$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('WARNING','theme-check').'</span>: '.__('Found PHP short tags in file %1$s.%2$s', 'theme-check'), '<strong>' . $filename . '</strong>', $grep);
+				$this->error[] = sprintf('<span class="tc-lead tc-warning">'.__('WARNING','plugin-check').'</span>: '.__('Found PHP short tags in file %1$s.%2$s', 'plugin-check'), '<strong>' . $filename . '</strong>', $grep);
 				$ret = false;
 			}
 		}
@@ -22,4 +22,4 @@ class PHPShortTagsCheck implements themecheck {
 	function getError() { return $this->error; }
 }
 
-$themechecks[] = new PHPShortTagsCheck;
+$pluginchecks[] = new PHPShortTagsCheck;

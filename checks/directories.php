@@ -1,6 +1,6 @@
 <?php
 
-class DirectoriesCheck implements themecheck {
+class DirectoriesCheck implements plugincheck {
 	protected $error = array();
 
 	function check( $php_files, $css_files, $other_files ) {
@@ -24,7 +24,7 @@ class DirectoriesCheck implements themecheck {
 		}
 
 		if ($found) {
-			$this->error[] = sprintf('<span class="tc-lead tc-required">' . __( 'REQUIRED', 'theme-check' ) . '</span>: ' . __( 'Please remove any extraneous directories like .git or .svn from the ZIP file before uploading it.', 'theme-check') );
+			$this->error[] = sprintf('<span class="tc-lead tc-required">' . __( 'REQUIRED', 'plugin-check' ) . '</span>: ' . __( 'Please remove any extraneous directories like .git or .svn from the ZIP file before uploading it.', 'plugin-check') );
 			$ret = false;
 		}
 
@@ -33,4 +33,4 @@ class DirectoriesCheck implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new DirectoriesCheck;
+$pluginchecks[] = new DirectoriesCheck;

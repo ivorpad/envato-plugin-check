@@ -1,14 +1,14 @@
 <?php
 // main global to hold our checks
-global $themechecks;
-$themechecks = array();
+global $pluginchecks;
+$pluginchecks = array();
 
 // counter for the checks
 global $checkcount;
 $checkcount = 0;
 
 // interface that all checks should implement
-interface themecheck
+interface plugincheck
 {
 	// should return true for good/okay/acceptable, false for bad/not-okay/unacceptable
 	public function check( $php_files, $css_files, $other_files );
@@ -23,25 +23,25 @@ foreach (glob(dirname(__FILE__). "/{$dir}/*.php") as $file) {
 	include $file;
 }
 
-do_action('themecheck_checks_loaded');
+do_action('plugincheck_checks_loaded');
 
-function run_themechecks($php, $css, $other) {
-	global $themechecks;
+function run_pluginchecks($php, $css, $other) {
+	global $pluginchecks;
 	$pass = true;
-	foreach($themechecks as $check) {
-		if ($check instanceof themecheck) {
+	foreach($pluginchecks as $check) {
+		if ($check instanceof plugincheck) {
 			$pass = $pass & $check->check($php, $css, $other);
 		}
 	}
 	return $pass;
 }
 
-function display_themechecks() {
+function display_pluginchecks() {
 	$results = '';
-	global $themechecks;
+	global $pluginchecks;
 	$errors = array();
-	foreach ($themechecks as $check) {
-		if ($check instanceof themecheck) {
+	foreach ($pluginchecks as $check) {
+		if ($check instanceof plugincheck) {
 			$error = $check->getError();
 			$error = (array) $error;
 			if (!empty($error)) {
@@ -76,12 +76,11 @@ function checkcount() {
 	$checkcount++;
 }
 
-// some functions theme checks use
 function tc_grep( $error, $file ) {
 	if ( ! file_exists( $file ) ) {
 		return '';
 	}
-	$lines = file( $file, FILE_IGNORE_NEW_LINES ); // Read the theme file into an array
+	$lines = file( $file, FILE_IGNORE_NEW_LINES );
 	$line_index = 0;
 	$bad_lines = '';
 	foreach( $lines as $this_line )	{
@@ -91,7 +90,7 @@ function tc_grep( $error, $file ) {
 			$error = ltrim( $error );
 		$pre = ( FALSE !== ( $pos = strpos( $this_line, $error ) ) ? substr( $this_line, 0, $pos ) : FALSE );
 		$pre = ltrim( htmlspecialchars( $pre ) );
-			$bad_lines .= "<pre class='tc-grep'>". __("Line ", "theme-check") . ( $line_index+1 ) . ": " . $pre . htmlspecialchars( substr( stristr( $this_line, $error ), 0, 75 ) ) . "</pre>";
+			$bad_lines .= "<pre class='tc-grep'>". __("Line ", "plugin-check") . ( $line_index+1 ) . ": " . $pre . htmlspecialchars( substr( stristr( $this_line, $error ), 0, 75 ) ) . "</pre>";
 		}
 		$line_index++;
 	}
@@ -116,7 +115,7 @@ function tc_preg( $preg, $file ) {
 				$pre = ( FALSE !== ( $pos = strpos( $this_line, $error ) ) ? substr( $this_line, 0, $pos ) : FALSE );
 			}
 			$pre = ltrim( htmlspecialchars( $pre ) );
-			$bad_lines .= "<pre class='tc-grep'>" . __("Line ", "theme-check") . ( $line_index+1 ) . ": " . $pre . htmlspecialchars( substr( stristr( $this_line, $error ), 0, 75 ) ) . "</pre>";
+			$bad_lines .= "<pre class='tc-grep'>" . __("Line ", "plugin-check") . ( $line_index+1 ) . ": " . $pre . htmlspecialchars( substr( stristr( $this_line, $error ), 0, 75 ) ) . "</pre>";
 		}
 		$line_index++;
 
@@ -201,70 +200,70 @@ function tc_print_r( $data ) {
 	echo $out;
 }
 
-function get_theme_data_from_contents( $theme_data ) {
-	$themes_allowed_tags = array(
-		'a' => array(
-			'href' => array(),'title' => array()
-			),
-		'abbr' => array(
-			'title' => array()
-			),
-		'acronym' => array(
-			'title' => array()
-			),
-		'code' => array(),
-		'em' => array(),
-		'strong' => array()
-	);
+// function get_theme_data_from_contents( $theme_data ) {
+// 	$themes_allowed_tags = array(
+// 		'a' => array(
+// 			'href' => array(),'title' => array()
+// 			),
+// 		'abbr' => array(
+// 			'title' => array()
+// 			),
+// 		'acronym' => array(
+// 			'title' => array()
+// 			),
+// 		'code' => array(),
+// 		'em' => array(),
+// 		'strong' => array()
+// 	);
 
-	$theme_data = str_replace ( '\r', '\n', $theme_data );
-	preg_match( '|^[ \t\/*#@]*Theme Name:(.*)$|mi', $theme_data, $theme_name );
-	preg_match( '|^[ \t\/*#@]*Theme URI:(.*)$|mi', $theme_data, $theme_uri );
-	preg_match( '|^[ \t\/*#@]*Description:(.*)$|mi', $theme_data, $description );
+// 	$theme_data = str_replace ( '\r', '\n', $theme_data );
+// 	preg_match( '|^[ \t\/*#@]*Theme Name:(.*)$|mi', $theme_data, $theme_name );
+// 	preg_match( '|^[ \t\/*#@]*Theme URI:(.*)$|mi', $theme_data, $theme_uri );
+// 	preg_match( '|^[ \t\/*#@]*Description:(.*)$|mi', $theme_data, $description );
 
-	if ( preg_match( '|^[ \t\/*#@]*Author URI:(.*)$|mi', $theme_data, $author_uri ) )
-		$author_uri = esc_url( trim( $author_uri[1]) );
-	else
-		$author_uri = '';
+// 	if ( preg_match( '|^[ \t\/*#@]*Author URI:(.*)$|mi', $theme_data, $author_uri ) )
+// 		$author_uri = esc_url( trim( $author_uri[1]) );
+// 	else
+// 		$author_uri = '';
 
-	if ( preg_match( '|^[ \t\/*#@]*Template:(.*)$|mi', $theme_data, $template ) )
-		$template = wp_kses( trim( $template[1] ), $themes_allowed_tags );
-	else
-		$template = '';
+// 	if ( preg_match( '|^[ \t\/*#@]*Template:(.*)$|mi', $theme_data, $template ) )
+// 		$template = wp_kses( trim( $template[1] ), $themes_allowed_tags );
+// 	else
+// 		$template = '';
 
-	if ( preg_match( '|^[ \t\/*#@]*Version:(.*)|mi', $theme_data, $version ) )
-		$version = wp_kses( trim( $version[1] ), $themes_allowed_tags );
-	else
-		$version = '';
+// 	if ( preg_match( '|^[ \t\/*#@]*Version:(.*)|mi', $theme_data, $version ) )
+// 		$version = wp_kses( trim( $version[1] ), $themes_allowed_tags );
+// 	else
+// 		$version = '';
 
-	if ( preg_match('|^[ \t\/*#@]*Status:(.*)|mi', $theme_data, $status) )
-		$status = wp_kses( trim( $status[1] ), $themes_allowed_tags );
-	else
-		$status = 'publish';
+// 	if ( preg_match('|^[ \t\/*#@]*Status:(.*)|mi', $theme_data, $status) )
+// 		$status = wp_kses( trim( $status[1] ), $themes_allowed_tags );
+// 	else
+// 		$status = 'publish';
 
-	if ( preg_match('|^[ \t\/*#@]*Tags:(.*)|mi', $theme_data, $tags) )
-		$tags = array_map( 'trim', explode( ',', wp_kses( trim( $tags[1] ), array() ) ) );
-	else
-		$tags = array();
+// 	if ( preg_match('|^[ \t\/*#@]*Tags:(.*)|mi', $theme_data, $tags) )
+// 		$tags = array_map( 'trim', explode( ',', wp_kses( trim( $tags[1] ), array() ) ) );
+// 	else
+// 		$tags = array();
 
-	$theme = ( isset( $theme_name[1] ) ) ? wp_kses( trim( $theme_name[1] ), $themes_allowed_tags ) : '';
+// 	$theme = ( isset( $theme_name[1] ) ) ? wp_kses( trim( $theme_name[1] ), $themes_allowed_tags ) : '';
 
-	$theme_uri = ( isset( $theme_uri[1] ) ) ? esc_url( trim( $theme_uri[1] ) ) : '';
+// 	$theme_uri = ( isset( $theme_uri[1] ) ) ? esc_url( trim( $theme_uri[1] ) ) : '';
 
-	$description = ( isset( $description[1] ) ) ? wp_kses( trim( $description[1] ), $themes_allowed_tags ) : '';
+// 	$description = ( isset( $description[1] ) ) ? wp_kses( trim( $description[1] ), $themes_allowed_tags ) : '';
 
-	if ( preg_match( '|^[ \t\/*#@]*Author:(.*)$|mi', $theme_data, $author_name ) ) {
-		if ( empty( $author_uri ) ) {
-			$author = wp_kses( trim( $author_name[1] ), $themes_allowed_tags );
-		} else {
-			$author = sprintf( '<a href="%1$s" title="%2$s">%3$s</a>', $author_uri, __( 'Visit author homepage' ), wp_kses( trim( $author_name[1] ), $themes_allowed_tags ) );
-		}
-	} else {
-		$author = __('Anonymous');
-	}
+// 	if ( preg_match( '|^[ \t\/*#@]*Author:(.*)$|mi', $theme_data, $author_name ) ) {
+// 		if ( empty( $author_uri ) ) {
+// 			$author = wp_kses( trim( $author_name[1] ), $themes_allowed_tags );
+// 		} else {
+// 			$author = sprintf( '<a href="%1$s" title="%2$s">%3$s</a>', $author_uri, __( 'Visit author homepage' ), wp_kses( trim( $author_name[1] ), $themes_allowed_tags ) );
+// 		}
+// 	} else {
+// 		$author = __('Anonymous');
+// 	}
 
-	return array( 'Name' => $theme, 'Title' => $theme, 'URI' => $theme_uri, 'Description' => $description, 'Author' => $author, 'Author_URI' => $author_uri, 'Version' => $version, 'Template' => $template, 'Status' => $status, 'Tags' => $tags );
-}
+// 	return array( 'Name' => $theme, 'Title' => $theme, 'URI' => $theme_uri, 'Description' => $description, 'Author' => $author, 'Author_URI' => $author_uri, 'Version' => $version, 'Template' => $template, 'Status' => $status, 'Tags' => $tags );
+// }
 
 function tc_get_plugins() {
 	$plugins = get_plugins();
@@ -281,56 +280,4 @@ function tc_get_plugins() {
 	return $wp_plugins;
 }
 
-/*
- * 3.3/3.4 compat
- *
- */
-function tc_get_themes() {
 
-	if ( ! class_exists( 'WP_Theme' ) )
-		return get_themes();
-
-	global $wp_themes;
-	if ( isset( $wp_themes ) )
-		return $wp_themes;
-
-	$themes = wp_get_themes();
-	$wp_themes = array();
-
-	foreach ( $themes as $theme ) {
-		$name = $theme->get('Name');
-		if ( isset( $wp_themes[ $name ] ) ) {
-			$wp_themes[$name . '/' . $theme->get_stylesheet()] = $theme;
-		}
-		else {
-			$wp_themes[$name] = $theme;
-		}
-	}
-	return $wp_themes;
-}
-
-function tc_get_theme_data( $theme_file ) {
-
-	if ( ! class_exists( 'WP_Theme' ) )
-		return get_theme_data( $theme_file );
-
-	$theme = new WP_Theme( basename( dirname( $theme_file ) ), dirname( dirname( $theme_file ) ) );
-
-	$theme_data = array(
-		'Name' => $theme->get('Name'),
-		'URI' => $theme->display('ThemeURI', true, false),
-		'Description' => $theme->display('Description', true, false),
-		'Author' => $theme->display('Author', true, false),
-		'AuthorURI' => $theme->display('AuthorURI', true, false),
-		'Version' => $theme->get('Version'),
-		'Template' => $theme->get('Template'),
-		'Status' => $theme->get('Status'),
-		'Tags' => $theme->get('Tags'),
-		'Title' => $theme->get('Name'),
-		'AuthorName' => $theme->display('Author', false, false),
-		'License'	=> $theme->display( 'License', false, false),
-		'License URI'	=> $theme->display( 'License URI', false, false),
-		'Template Version'	=> $theme->display( 'Template Version', false, false)
-	);
-	return $theme_data;
-}

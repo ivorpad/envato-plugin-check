@@ -1,11 +1,11 @@
 <?php
 /**
- * Run Envato Theme Check from the command line
+ * Run Envato Plugin Check from the command line
  */
 include 'checkbase.php';
 include 'main.php';
 
-class ThemeCheckCLI extends WP_CLI_Command {
+class plugincheckCLI extends WP_CLI_Command {
 	function __construct()
 	{
 		parent::__construct();
@@ -28,27 +28,27 @@ class ThemeCheckCLI extends WP_CLI_Command {
 	*
 	* @subcommand list
 	*/
-	public function list_themes( $args = array(), $assoc_args = array() )
-	{
-		$defaults       = array( 'errors' => false, 'allowed' => null, 'blog_id' => 0 );
-		$args           = wp_parse_args( $assoc_args, $defaults );
-		$args['errors'] = 'true' === $args['errors'];
+	// public function list_themes( $args = array(), $assoc_args = array() )
+	// {
+	// 	$defaults       = array( 'errors' => false, 'allowed' => null, 'blog_id' => 0 );
+	// 	$args           = wp_parse_args( $assoc_args, $defaults );
+	// 	$args['errors'] = 'true' === $args['errors'];
 
-		if ( ( 'true' == $args['allowed'] ) || ( 'false' == $args['allowed'] ) )
-			$args['allowed'] = 'true' === $args['allowed'];
+	// 	if ( ( 'true' == $args['allowed'] ) || ( 'false' == $args['allowed'] ) )
+	// 		$args['allowed'] = 'true' === $args['allowed'];
 
-		$themes = wp_get_themes( $args );
+	// 	$themes = wp_get_themes( $args );
 
-		foreach ( $themes as $slug => $theme )
-		{
-			WP_CLI::line( $slug . ': ' . $theme->get('Name') );
-		}
-	}
+	// 	foreach ( $themes as $slug => $theme )
+	// 	{
+	// 		WP_CLI::line( $slug . ': ' . $theme->get('Name') );
+	// 	}
+	// }
 	/**
-	* Check a theme
+	* Check a plugin
 	*
 	* <theme>
-	* : The theme slug to check
+	* : The plugin slug to check
 	*
 	* [--format=<format>]
 	* : set to true to format as json. Default: false
@@ -56,7 +56,7 @@ class ThemeCheckCLI extends WP_CLI_Command {
 	*/
 	public function check( $args = array(), $assoc_args = array() )
 	{
-		global $themechecks;
+		global $pluginchecks;
 
 		checkcount();
 
@@ -90,12 +90,12 @@ class ThemeCheckCLI extends WP_CLI_Command {
 			}
 		}
 
-		$success = run_themechecks($php, $css, $other);
+		$success = run_pluginchecks($php, $css, $other);
 		$errors  = array();
 
-		foreach ( $themechecks as $check )
+		foreach ( $pluginchecks as $check )
 		{
-			if ( $check instanceof themecheck )
+			if ( $check instanceof plugincheck )
 			{
 				$error = $check->getError();
 
@@ -233,7 +233,7 @@ class ThemeCheckCLI extends WP_CLI_Command {
 	}
 }
 
-class ThemeCheckCLILogger extends WP_CLI\Loggers\Regular {
+class plugincheckCLILogger extends WP_CLI\Loggers\Regular {
 	public function _line( $message, $label, $color, $handle = STDOUT )
 	{
 		if ( ! empty( $label ) )
@@ -248,6 +248,6 @@ class ThemeCheckCLILogger extends WP_CLI\Loggers\Regular {
 		$this->_line( WP_CLI::colorize( $message ), '', '', STDERR );
 	}
 }
-WP_CLI::set_logger( new ThemeCheckCLILogger( true ) );
+WP_CLI::set_logger( new plugincheckCLILogger( true ) );
 
-WP_CLI::add_command( 'theme review', 'ThemeCheckCLI' );
+WP_CLI::add_command( 'theme review', 'plugincheckCLI' );
