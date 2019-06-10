@@ -42,7 +42,7 @@ class Themeforest implements themecheck {
 		);
 
 		$warn_checks = array(
-			'/@\$/'                                           => esc_html__( 'Possible error suppression is being used', 'theme-check' ),
+			'/@(?!media|keyframes|font)(\$|([a-zA-Z]))+/'                    => esc_html__( 'Possible error suppression is being used', 'theme-check' ),
 			'/@include/'                                      => esc_html__( 'Possible error suppression is being used', 'theme-check' ),
 			'/@require/'                                      => esc_html__( 'Possible error suppression is being used', 'theme-check' ),
 			'/@file/'                                         => esc_html__( 'Possible error suppression is being used', 'theme-check' ),
@@ -50,7 +50,7 @@ class Themeforest implements themecheck {
 			'/force_balance_tags\s*\(\s*\$/'      						=> esc_html__( 'Possible data validation issues found. force_balance_tags() does not escape data', 'theme-check' ),
 			'/(echo|print)\s*(\$|[a-zA-Z])/' 									=> esc_html__( 'Possible data validation issues found. All dynamic data must be correctly escaped for the context where it is rendered', 'theme-check' ),
 			'/$_SERVER/'                   										=> esc_html__( 'PHP Global Variable found. Ensure the context is safe and reliable', 'theme-check' ),
-			'/(?=.*(\$wpdb)?->(query|get_results|get_row|get_var|get_col)\s*\(\s)((?!prepare).)*/' => esc_html__('Possible unprepared SQL statements. All queries with this method need to be prepared', 'theme-check')
+			'/(?<=(->))((query|get_results|get_row|get_var|get_col)\()(?!\s*\D*prepare)/' => esc_html__('Possible unprepared SQL statements. All queries with this method need to be prepared', 'theme-check')
 		);
 
 		$info_checks = array(
