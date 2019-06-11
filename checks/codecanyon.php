@@ -38,7 +38,7 @@ class CodeCanyon implements plugincheck {
 			'/@file/'                                         		=> esc_html__( 'Possible error suppression is being used', 'plugin-check' ),
 			'/balanceTags\s*\(\s*/'             									=> esc_html__( 'Possible data validation issues found. balanceTags() does not escape data', 'plugin-check' ),
 			'/force_balance_tags\s*\(\s*/'      									=> esc_html__( 'Possible data validation issues found. force_balance_tags() does not escape data', 'plugin-check' ),
-			'/(echo|print)\s*(\$|[a-zA-Z])/' 											=> esc_html__( 'Possible data validation issues found. All dynamic data must be correctly escaped for the context where it is rendered', 'plugin-check' ),
+			'/(echo|print)\s+(\$|[-a-zA-Z0-9_])+/' 								=> esc_html__( 'Possible data validation issues found. All dynamic data must be correctly escaped for the context where it is rendered', 'plugin-check' ),
 			'/$_SERVER/'                   												=> esc_html__( 'PHP Global Variable found. Ensure the context is safe and reliable', 'plugin-check' ),
 			'/(?<=(?:->))get_results(?!.+\bprepare\b)\(.*\)/'			=> esc_html__( 'Possible unprepared SQL statements. All queries with this method need to be prepared', 'plugin-check' ),
 			'/(?<=(?:->))query(?!.+\bprepare\b)\(.*\)/'						=> esc_html__( 'Possible unprepared SQL statements. All queries with this method need to be prepared', 'plugin-check' ),
